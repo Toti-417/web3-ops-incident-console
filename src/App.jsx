@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Wrench, Search, Copy, Check, RefreshCw, ExternalLink, Activity, GitBranch } from 'lucide-react';
 import { PRESET_INCIDENTS, checkRpcHealth, diagnoseTransaction } from './services/triageEngine';
 
@@ -63,15 +64,21 @@ export default function App() {
 
       <section className="grid-3" aria-label="Live RPC Health">
         {rpcHealth.map((ep) => (
-          <div key={ep.id} className="card">
+          <motion.div
+            key={ep.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="glass-panel card"
+          >
             <div className="label">{ep.name} RPC</div>
             <div className={`val status-${ep.status}`}>{ep.status}</div>
             <div className="sub">Latency: {ep.latencyMs} ms &bull; Height: {ep.height}</div>
-          </div>
+          </motion.div>
         ))}
       </section>
 
-      <section className="card" style={{ marginBottom: 20 }}>
+      <section className="glass-panel card" style={{ marginBottom: 22 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <span className="label">Transaction Incident Debugger</span>
           <button type="button" className="btn btn-secondary" onClick={loadHealth} style={{ padding: '6px 10px', fontSize: '0.78rem' }}>
@@ -125,8 +132,13 @@ export default function App() {
       {error && <div className="error-box" role="alert">{error}</div>}
 
       {result && (
-        <section className="grid-2">
-          <div className="card">
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="grid-2"
+        >
+          <div className="glass-panel card">
             <div className="label">On-Chain Execution Telemetry</div>
             <div className={`val status-${result.status}`} style={{ marginBottom: 10 }}>
               {result.status} &bull; {result.chainName}
@@ -147,7 +159,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="glass-panel card">
             <div className="label">Support Root-Cause &amp; Ready-to-Send Reply</div>
             <div style={{ fontWeight: 700, marginTop: 8, color: '#38bdf8' }}>{result.diagnosis.severity}</div>
             <p style={{ fontSize: '0.84rem', color: '#cbd5e1', marginTop: 6 }}>{result.diagnosis.rootCause}</p>
@@ -165,7 +177,7 @@ export default function App() {
               </button>
             </div>
           </div>
-        </section>
+        </motion.section>
       )}
     </div>
   );
